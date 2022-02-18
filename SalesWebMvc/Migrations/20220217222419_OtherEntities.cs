@@ -30,7 +30,7 @@ namespace SalesWebMvc.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
-
+                    
             migrationBuilder.CreateTable(
                 name: "SalesRecord",
                 columns: table => new
