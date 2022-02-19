@@ -11,6 +11,7 @@ namespace SalesWebMvc.Models
         public double BaseSalary { get; set; }
         public DateTime BirthDate { get; set; }
         public Department department { get; set; }
+        public int DepartmentId { get; set; } //Para que o framework consiga indentificar que essa variavel é uma chave esgtrangeira, é nessário criar desta forma sempre seguindo a sintaxe original juntamente com o sufixo ID
         public ICollection<SalesRecord> Sales { get; set; } = new List<SalesRecord>();
 
         public Seller()
