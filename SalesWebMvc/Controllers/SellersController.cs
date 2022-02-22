@@ -23,7 +23,7 @@ namespace SalesWebMvc.Controllers
             _departmentService = departmentService;
         }
 
-
+        
 
         public async Task< IActionResult> Index()
         {
@@ -77,9 +77,16 @@ namespace SalesWebMvc.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id) //Método de remoção com método de envio POST
         {
-           await  _sellerService.RemoveAsync(id);
-            return RedirectToAction(nameof(Index)); //Após a remoção é enviado para a index novamente
-        }
+            try {
+                await _sellerService.RemoveAsync(id);
+                return RedirectToAction(nameof(Index)); //Após a remoção é enviado para a index novamente
+            }catch(IntegrityException e)
+            {
+
+                return RedirectToAction(nameof(Index), new { message = e.Message });
+            }
+            
+            }
 
 
         public async Task<IActionResult> Details(int? id)
