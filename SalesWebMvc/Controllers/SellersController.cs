@@ -7,6 +7,7 @@ using SalesWebMvc.Services;
 using SalesWebMvc.Models;
 using SalesWebMvc.Models.ViewModels;
 using SalesWebMvc.Services.Exceptions;
+using System.Diagnostics;
 
 namespace SalesWebMvc.Controllers
 {
@@ -52,7 +53,7 @@ namespace SalesWebMvc.Controllers
         {
             if(id == null) //Valida se de fato o vendedor com o Id selecionado existe
             {
-                return NotFound(); //Mensagem de não encontrado
+                return NotFound();//Mensagem de não encontrado
             }
 
             var obj = _sellerService.FindbyId(id.Value);
@@ -126,6 +127,15 @@ namespace SalesWebMvc.Controllers
             }  catch(DbConcurrencyException e )
             {
                 return BadRequest();
+            }
+
+             IActionResult Error(string message)
+            {
+                var viewModel = new ErrorViewModel()
+                {
+                    Message = message, RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier//Massete para pegar o ID interno da requisição
+                };
+                return View(viewModel);
             }
         }
 
