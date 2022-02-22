@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using SalesWebMvc.Data;
 using SalesWebMvc.Models;
+using Microsoft.EntityFrameworkCore;
+using SalesWebMvc.Services.Exceptions;
+
 
 namespace SalesWebMvc.Services
 {
@@ -34,7 +37,8 @@ namespace SalesWebMvc.Services
 
         public Seller FindbyId(int id)
         {
-            return _context.Seller.FirstOrDefault(obj => obj.Id == id);
+            return _context.Seller.Include(obj => obj.department).FirstOrDefault(obj => obj.Id == id); //Para carregar outros objetos jutamente com a busca principal
+
         }
 
         public void Remove(int id)
@@ -42,6 +46,24 @@ namespace SalesWebMvc.Services
             var obj = _context.Seller.Find(id);
             _context.Seller.Remove(obj);
             _context.SaveChanges();
+        }
+
+        public void Update(Seller obj)
+        {
+            if(!_context.Seller.Any(x => x.Id == obj.Id)) //Verifica se há algum vendedor com o ID indicado
+            {
+                throw new NotFoundException("Id não encontrado");
+
+            }
+            try
+            {
+                _context.Update(obj);
+                _context.SaveChanges();
+            }
+            catch(DbConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
         }
 
 
