@@ -45,5 +45,23 @@ namespace SalesWebMvc.Controllers
             _sellerService.Insert(seller); //Insere através do método no banco
             return RedirectToAction(nameof(Index)); //Após isso redireciona para a view para mostrar o resultado novamente
         }
+
+
+        public IActionResult Delete(int? id)
+        {
+            if(id == null) //Valida se de fato o vendedor com o Id selecionado existe
+            {
+                return NotFound(); //Mensagem de não encontrado
+            }
+
+            var obj = _sellerService.FindbyId(id.Value);
+
+            if (obj== null)
+            {
+                return NotFound();
+            }
+
+            return View(obj);
+        }
     }
 }
