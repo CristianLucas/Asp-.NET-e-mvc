@@ -63,5 +63,35 @@ namespace SalesWebMvc.Controllers
 
             return View(obj);
         }
+
+        [HttpPost] //Indica que este método é POST
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id) //Método de remoção com método de envio POST
+        {
+            _sellerService.Remove(id);
+            return RedirectToAction(nameof(Index)); //Após a remoção é enviado para a index novamente
+        }
+
+
+        public IActionResult Details(int? id)
+        {
+            if (id == null) //Valida se de fato o vendedor com o Id selecionado existe
+            {
+                return NotFound(); //Mensagem de não encontrado
+            }
+
+            var obj = _sellerService.FindbyId(id.Value);
+
+            if (obj == null)
+            {
+                return NotFound();
+            }
+            return View(obj);
+        }
+
+
     }
+
+
+
 }
