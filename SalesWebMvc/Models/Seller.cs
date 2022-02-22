@@ -7,15 +7,23 @@ namespace SalesWebMvc.Models
     public class Seller
     {
         public int  Id { get; set; }
+
+        [Required(ErrorMessage = "{0} Obrigatório")] //Campo obrigatório
+        [StringLength(60, MinimumLength = 3, ErrorMessage = "{0}Tamanho do nome deve ser entre {1} e {2}")] //{0} pega automaticamente o nome do atributo {1} pega o o minimo e {2} o maximo
         public string Name { get; set; }
 
+        [Required(ErrorMessage = "{0} Obrigatório")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+
+        [Required(ErrorMessage = "{0} Obrigatório")]
         [Display(Name = "Base Salary")]
         [DisplayFormat(DataFormatString ="{0:F2}")]
+        [Range(100.0, 50000.0, ErrorMessage = "{0} tem que ser entre {1} to {2}")]
         public double BaseSalary { get; set; }
 
+        [Required(ErrorMessage = "{0} Obrigatório")]
         [Display(Name = "Birth Date")] //Customiza o que irá aparecer em tela
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
