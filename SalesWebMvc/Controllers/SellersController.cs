@@ -25,16 +25,16 @@ namespace SalesWebMvc.Controllers
 
 
 
-        public IActionResult Index()
+        public async Task< IActionResult> Index()
         {
-            var list = _sellerService.FindAll();
+            var list = await _sellerService.FindAllAsync();
             return View(list);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
          
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsynk();
             var viewModel = new SellerFormViewModel { Departments = departments };
 
             return View(viewModel);
@@ -42,27 +42,28 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller) //Cria o novo vendedor
+        public async Task<IActionResult> Create(Seller seller) //Cria o novo vendedor
         {
             if (!ModelState.IsValid) //Verifica se o formulário do seller está válidado (previne quando o javascript do clinte está desabilitado
             {
-                var departments = _departmentService.FindAll();
+                var departments = await _departmentService.FindAllAsynk();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
                 return View(viewModel);
             }
-            _sellerService.Insert(seller); //Insere através do método no banco
+           await _sellerService.InsertAsync(seller); //Insere através do método no banco
             return RedirectToAction(nameof(Index)); //Após isso redireciona para a view para mostrar o resultado novamente
         }
 
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
+            
             if(id == null) //Valida se de fato o vendedor com o Id selecionado existe
             {
                 return NotFound();//Mensagem de não encontrado
             }
 
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
 
             if (obj== null)
             {
@@ -74,21 +75,21 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost] //Indica que este método é POST
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id) //Método de remoção com método de envio POST
+        public async Task<IActionResult> Delete(int id) //Método de remoção com método de envio POST
         {
-            _sellerService.Remove(id);
+           await  _sellerService.RemoveAsync(id);
             return RedirectToAction(nameof(Index)); //Após a remoção é enviado para a index novamente
         }
 
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null) //Valida se de fato o vendedor com o Id selecionado existe
             {
                 return NotFound(); //Mensagem de não encontrado
             }
 
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
 
             if (obj == null)
             {
@@ -97,13 +98,13 @@ namespace SalesWebMvc.Controllers
             return View(obj);
         }
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if(id == null)
             {
                 return NotFound();
             }
-            var obj = _sellerService.FindbyId(id.Value);
+            var obj = await _sellerService.FindbyIdAsync(id.Value);
 
             if(obj == null)
             {
@@ -117,12 +118,12 @@ namespace SalesWebMvc.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async  Task<IActionResult> Edit(int id, Seller seller)
         {
 
             if (!ModelState.IsValid) //Verifica se o formulário do seller está válidado (previne quando o javascript do clinte está desabilitado
             {
-                var departments = _departmentService.FindAll();
+                var departments =await _departmentService.FindAllAsynk();
                 var viewModel = new SellerFormViewModel { Seller = seller, Departments = departments };
                 return View(viewModel);
             }
@@ -133,7 +134,7 @@ namespace SalesWebMvc.Controllers
             }
             try
             {
-                _sellerService.Update(seller);
+                await _sellerService.Update(seller);
                 return RedirectToAction(nameof(Index));
             }catch(NotFoundException e)
             {

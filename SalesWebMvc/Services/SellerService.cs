@@ -24,33 +24,35 @@ namespace SalesWebMvc.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.ToList(); //Acessa a fonte de dados de vendedores es converte para lista
+            return await _context.Seller.ToListAsync(); //Acessa a fonte de dados de vendedores es converte para lista
         }
 
-        public void Insert(Seller obj) //Insere no banco de dados o cadastro do novo vendedor
+        public async Task InsertAsync(Seller obj) //Insere no banco de dados o cadastro do novo vendedor
         {
             _context.Add(obj);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Seller FindbyId(int id)
+        public async Task<Seller> FindbyIdAsync(int id)
         {
-            return _context.Seller.Include(obj => obj.department).FirstOrDefault(obj => obj.Id == id); //Para carregar outros objetos jutamente com a busca principal
+            return await _context.Seller.Include(obj => obj.department).FirstOrDefaultAsync(obj => obj.Id == id); //Para carregar outros objetos jutamente com a busca principal
 
         }
 
-        public void Remove(int id)
+        public async Task RemoveAsync(int id)
         {
-            var obj = _context.Seller.Find(id);
+            var obj =await _context.Seller.FindAsync(id);
             _context.Seller.Remove(obj);
-            _context.SaveChanges();
+           await _context.SaveChangesAsync();
         }
 
-        public void Update(Seller obj)
+        public async Task Update(Seller obj)
         {
-            if(!_context.Seller.Any(x => x.Id == obj.Id)) //Verifica se há algum vendedor com o ID indicado
+            var hasAny = await _context.Seller.AnyAsync(x => x.Id == obj.Id);
+
+            if (!hasAny) //Verifica se há algum vendedor com o ID indicado
             {
                 throw new NotFoundException("Id não encontrado");
 
@@ -58,7 +60,7 @@ namespace SalesWebMvc.Services
             try
             {
                 _context.Update(obj);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch(DbConcurrencyException e)
             {
