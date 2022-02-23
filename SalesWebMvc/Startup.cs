@@ -47,6 +47,7 @@ namespace SalesWebMvc
             services.AddScoped<SeedingService>(); //Registra o serviço no sistema de injeção de dependencias na aplicação
             services.AddScoped<SellerService>();
             services.AddScoped<DepartmentService>();
+            services.AddScoped<SalesRecordService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
