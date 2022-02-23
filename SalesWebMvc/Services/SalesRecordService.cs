@@ -36,7 +36,7 @@ namespace SalesWebMvc.Services
             {
                 result = result.Where(x => x.Date <= maxDate.Value);
             }
-            return  result
+            return  result //Neste ponto tem que informar a palavra "await", porém está dando erro ao colocar, e pela falta dele a consulta não está funcionando
                 .Include(x => x.seller)
                 .Include(x => x.seller.department)//Faz o join nas tabelas e lista o resultado pelo comando abaixo
                 .OrderByDescending(x => x.Date)
@@ -44,5 +44,28 @@ namespace SalesWebMvc.Services
 
 
         }
+
+        public async Task<List<IGrouping<Department,SalesRecord>>>FindByDateGroupingAsync(DateTime? minDate, DateTime? maxDate)
+        {
+            var result = from obj in _context.SalesRecord select obj;
+            if (minDate.HasValue)
+            {
+                result = result.Where(x => x.Date >= minDate.Value);
+            }
+            if (maxDate.HasValue)
+            {
+                result = result.Where(x => x.Date <= maxDate.Value);
+            }
+            return  result //Neste ponto tem que informar a palavra "await", porém está dando erro ao colocar, e pela falta dele a consulta não está funcionando
+                .Include(x => x.seller)
+                .Include(x => x.seller.department)//Faz o join nas tabelas e lista o resultado pelo comando abaixo
+                .OrderByDescending(x => x.Date)
+                .GroupBy(x => x.seller.department)
+                .ToList();
+
+
+        }
+
+
     }
 }

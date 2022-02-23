@@ -11,11 +11,11 @@
         <form class="navbar-form navbar-left" role="search">
             <div class="form-group">
                 <label for="minDate"> Min Date</label>
-                <input type="date" class="form-control" name="minDate" />
+                <input type="date" class="form-control" name="minDate" value="@ViewData["minDate"] />
             </div>
             <div class="form-group">
                 <label for="maxDate">Max Date</label>
-                <input form="date"  class="form-control" name="maxDate"/>
+                <input form="date"  class="form-control" name="maxDate" value="@ViewData["maxDate"]/>
             </div>
             <button type="submit" class="btn btn-primary">Filter</button>
         </form> 
